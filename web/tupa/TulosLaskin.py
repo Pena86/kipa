@@ -9,7 +9,6 @@ from decimal import *
 import re
 import math
 import operator
-import logging as log
 
 #from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
@@ -17,6 +16,7 @@ from django.core.cache import cache
 from .models import *
 from .laskentatyypit import *
 from .taulukkolaskin import *
+from . import log
 
 def korvaa(lause,pino,loppu=None) :
     """
@@ -301,7 +301,7 @@ def laskeSarja(sarja,syotteet,vartiot=None,tehtavat=None):
                 #Kokonaispisteet:
                 summa=0
                 for s in tulokset[i] :
-                        if s and type(s)!=str and type(s)!=unicode : summa+= s 
+                        if s and type(s)!=str and type(s)!=str : summa+= s 
                 tulokset[i].insert(0,summa)
                 #Vartio objekti jokaisen rivin alkuun:
                 tulokset[i].insert(0,vartiot[i])

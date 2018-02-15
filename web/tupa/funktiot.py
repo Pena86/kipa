@@ -51,7 +51,7 @@ def summa( *lista ) :
         """
         s=DictDecimal(0) 
         for v in lista : 
-            if v and not type(v)==unicode and not type(v)==str: 
+            if v and not type(v)==str and not type(v)==str: 
                 s=s+v
         return s
 

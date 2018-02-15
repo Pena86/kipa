@@ -302,7 +302,7 @@ def maaritaTehtava(request, kisa_nimi, tehtava_id=None, sarja_id=None,talletettu
 
         otsikko = u'Uusi tehtävä' + ' (' + sarja.nimi + ')'
 
-        if tehtava and not tehtava.nimi == '' : otsikko = unicode(tehtava.nimi) + ' (' + sarja.nimi + ')'
+        if tehtava and not tehtava.nimi == '' : otsikko = str(tehtava.nimi) + ' (' + sarja.nimi + ')'
 
         # Talletetaanko ja siirrytäänkö talletettu sivuun?
         if posti and not 'lisaa_maaritteita' in posti.keys() and daatta['valid'] :
@@ -618,7 +618,7 @@ def sarjanTuloksetCSV(request, kisa_nimi, sarja_id) :
 
         otsikkorivi=['','Sij.', 'Nro:', 'Vartio:', 'Yht:']
         for teht in mukana[0][2:] :
-                otsikkorivi.append(unicode(teht.jarjestysnro))
+                otsikkorivi.append(str(teht.jarjestysnro))
         writer.writerow(otsikkorivi)
 
         nimirivi = ['','','','','']
@@ -640,18 +640,18 @@ def sarjanTuloksetCSV(request, kisa_nimi, sarja_id) :
         writer.writerow(['',''])
 
         for i in range(len(mukana[1:])) :
-                vartiorivi = [ mukana[i+1][0].tasa , str(numero) , unicode(mukana[i+1][0].nro), unicode(mukana[i+1][0].nimi),]
-                vartiorivi.append( unicode(mukana[i+1][1]).replace(".",",") )
-                for num in mukana[i+1][2:] : vartiorivi.append( unicode(num).replace(".",",") )
+                vartiorivi = [ mukana[i+1][0].tasa , str(numero) , str(mukana[i+1][0].nro), str(mukana[i+1][0].nimi),]
+                vartiorivi.append( str(mukana[i+1][1]).replace(".",",") )
+                for num in mukana[i+1][2:] : vartiorivi.append( str(num).replace(".",",") )
                 writer.writerow( vartiorivi  )
                 numero=numero+1
 
         writer.writerow([""])
         writer.writerow(["","","Ulkopuolella:"])
         for i in range(len(ulkona)) :
-                vartiorivi = [ ulkona[i][0].tasa , str(numero), unicode(ulkona[i][0].nro),unicode(ulkona[i][0].nimi),]
-                vartiorivi.append( unicode(ulkona[i][1]).replace(".",",") )
-                for num in ulkona[i][2:] : vartiorivi.append( unicode(num).replace(".",",") )
+                vartiorivi = [ ulkona[i][0].tasa , str(numero), str(ulkona[i][0].nro),str(ulkona[i][0].nimi),]
+                vartiorivi.append( str(ulkona[i][1]).replace(".",",") )
+                for num in ulkona[i][2:] : vartiorivi.append( str(num).replace(".",",") )
                 writer.writerow( vartiorivi  )
 
                 ulkona[i].insert(0,numero)
@@ -733,7 +733,7 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             writer.writerow(['Sij.', 'Piiri', 'Pisteet'])
             for l, i in sorted(piiriTulos.items(), key=lambda a: a[1], reverse = True):
                 #print (sij_laskuri, l, i)
-                writer.writerow([unicode(sij_laskuri), l, unicode(i['pisteet'])])
+                writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
                 sij_laskuri += 1
             writer.writerow([]) # tyhjä rivi
 
@@ -742,7 +742,7 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             writer.writerow(['Sij.', 'Lippukunta', 'Pisteet'])
             for l, i in sorted(lpkTulos.items(), key=lambda a: a[1], reverse = True):
                 #print (sij_laskuri, l, i)
-                writer.writerow([unicode(sij_laskuri), l, unicode(i['pisteet'])])
+                writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
                 sij_laskuri += 1
             writer.writerow([]) # tyhjä rivi
 
@@ -751,7 +751,7 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
                 writer.writerow(['Sarja: '+ sarja[0]])
                 writer.writerow(['Vartio', 'Piiri', 'Lippukunta', 'Kisap.', 'Piirip.'])
                 for vartio in sarja[1]:
-                    writer.writerow([vartio[0], vartio[1], vartio[2], unicode(vartio[3]), unicode(vartio[4])])
+                    writer.writerow([vartio[0], vartio[1], vartio[2], str(vartio[3]), str(vartio[4])])
                 writer.writerow([]) # tyhjä rivi
 
             return response #.csv lataus lähtee tällä, uutta sivua selaimeen ei ladata

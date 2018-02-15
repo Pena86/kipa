@@ -4,11 +4,11 @@
 
 import re
 import settings
-import logging as log
 
 from .laskentatyypit import *
 from .funktiot import perusfunktiot
 from .funktiot import listafunktiot
+from . import log
 
 pfunktiot={}
 lfunktiot={}

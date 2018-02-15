@@ -72,14 +72,14 @@ class TuhoaTehtavaForm(ModelForm):
 tuhoaTehtaviaFormset = modelformset_factory(Tehtava,can_delete=True,extra=0,form=TuhoaTehtavaForm)
 
 class TehtavaLinkkilistaFormset(tuhoaTehtaviaFormset):
-        def __unicode__(self) :
-                piirto=unicode(self.management_form)
+        def __str__(self) :
+                piirto=str(self.management_form)
                 for form in self.forms :
                         linkki=""
                         nimi=""
                         if form.instance:
-                                linkki=unicode(form.instance.id)+"/"
-                                nimi=unicode(form.instance.jarjestysnro)+". "+unicode(form.instance.nimi)
+                                linkki=str(form.instance.id)+"/"
+                                nimi=str(form.instance.jarjestysnro)+". "+str(form.instance.nimi)
                         piirto=piirto+"<a href="+linkki+">"+nimi+"</a>  "+form.as_p()+"<br>" 
                         piirto = piirto.replace("<p>","").replace("</p>","")
                 return mark_safe(piirto)
@@ -127,7 +127,7 @@ class PisteField(forms.CharField) :
                 haku = re.match(r"^((\d*)[,.]?\d+)$",value)
                 if haku:
                         merkkijono='0'+haku.group(0)
-                        return unicode( Decimal(merkkijono.replace(",",".")) )
+                        return str( Decimal(merkkijono.replace(",",".")) )
                 if value=="kesk":
                         return value
                 elif value=="h":
@@ -153,7 +153,7 @@ class AikaField(forms.CharField):
                 super(AikaField, self).clean(value)
                 haku = re.match(r"^(\d+):(\d+):(\d+)$",value)    
                 if haku:
-                        return unicode(int(haku.group(1))*60*60 + int(haku.group(2))*60 + int(haku.group(3)))
+                        return str(int(haku.group(1))*60*60 + int(haku.group(2))*60 + int(haku.group(3)))
                 elif not value :
                         return None
                 elif value=="kesk":
@@ -268,7 +268,7 @@ def tulostauluFormFactory( tauluTyyppi ) :
                                 tulos.save()
                                 self.taulu=tulos
                         return tulos
-                def __unicode__(self) :
+                def __str__(self) :
                         formidata = { "name" : self.id  , "id" : self.id ,"value": "","errors" : self.errors } 
                         if self.taulu: 
                                 formidata["value"]=self.taulu.pisteet

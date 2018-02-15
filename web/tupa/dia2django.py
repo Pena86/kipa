@@ -94,7 +94,7 @@ def korvaaLuokanRunko(koodi,luokka):
 def luoMallienRungot(kaavion_nimi,koodin_nimi):
         source=open( koodin_nimi , "r" )
         koodi=source.read()
-        koodi=unicode(koodi,"utf-8")
+        koodi=str(koodi,"utf-8")
         source.close()            
 
         f=codecs.open(kaavion_nimi,"rb")
