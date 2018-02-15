@@ -3,16 +3,15 @@
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
 from decimal import *
-
-import log
+import logging as log
 
 def decimal_uni(self) :
         return str(self.quantize(Decimal('0.1'),rounding=ROUND_HALF_UP ) )
 def decimal_repr(self) :
         return unicode(self.quantize(Decimal('0.1'),rounding=ROUND_HALF_UP ) )
 
-Decimal.__repr__= decimal_repr
-Decimal.__unicode__= decimal_uni
+#Decimal.__repr__= decimal_repr
+#Decimal.__unicode__= decimal_uni
 
 class SequenceOperations :
         def __add__(self,other): return self.operate_to_all( lambda a,b: a+b , other)
@@ -327,4 +326,3 @@ def suorita_lista(funktio,a,*param ) :
                         parametrit.append(p)
                 log.logFunction(funktio,parametrit,tulos)
         return tulos
-

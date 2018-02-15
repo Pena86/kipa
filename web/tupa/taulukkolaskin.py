@@ -3,12 +3,12 @@
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
 import re
-from laskentatyypit import *
-from funktiot import perusfunktiot
-from funktiot import listafunktiot
 import settings
-#from tupa.log import * 
-import log
+import logging as log
+
+from .laskentatyypit import *
+from .funktiot import perusfunktiot
+from .funktiot import listafunktiot
 
 pfunktiot={}
 lfunktiot={}
@@ -106,6 +106,3 @@ def laskeTaulukko(taulukko,muuttujat) :
                         else: rivi.append(tulos)
                 tulokset.append(rivi)
         return tulokset
-
-
-

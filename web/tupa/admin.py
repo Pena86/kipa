@@ -3,9 +3,10 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-from models import *
 from django.contrib import admin
-from formit import *
+
+from .models import *
+from .formit import *
 
 class SarjaInline(admin.TabularInline):
     model = Sarja
@@ -47,4 +48,3 @@ admin.site.register(TuomarineuvosTulos)
 admin.site.register(TestausTulos)
 admin.site.register(OsaTehtava,OsaTehtavaAdmin)
 admin.site.register(Parametri)
-

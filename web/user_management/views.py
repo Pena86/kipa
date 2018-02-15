@@ -64,7 +64,7 @@ def kayttajan_tiedot(request, user_name = None):
     """
     Käyttäjä muokkaa omia tietojaan
     """
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         from django.contrib.auth import update_session_auth_hash
         userform = modelform_factory(User, 
                 fields=('username', 'first_name', 'last_name', 'email'),
@@ -116,4 +116,3 @@ def kayttajan_tiedot(request, user_name = None):
         'form' : form,
         'pwform' : pwform, 
         },)
-

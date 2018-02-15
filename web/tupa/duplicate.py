@@ -2,7 +2,7 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-import models 
+#import models
 
 def kisa_xml(kisa):
         """
@@ -71,4 +71,3 @@ def kopioiTehtava(teht,sarjaan,uusiNimi=None) :
                         uusim.osa_tehtava_id=uusiot.id
                         uusim.id=None
                         uusim.save()
-

@@ -1,6 +1,9 @@
 #!/usr/bin/python2
-import sys, os
-from tupa.dia2django import luoMallienRungot
+import sys
+import os
+#from tupa.dia2django import luoMallienRungot
+
+print ("Running python version: ", sys.version)
 
 #import settings #
 #import legacySettings # Legacy settings for exporting an legacy db
@@ -15,5 +18,3 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
-
-

@@ -155,7 +155,6 @@ class Parametri(models.Model) :
         osa_tehtava = models.ForeignKey(Osatehtava)
         class Meta:
             db_table = u'tupa_parametri'
-        
+
 
         #end_legacy_class
-        

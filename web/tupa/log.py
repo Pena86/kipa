@@ -81,4 +81,3 @@ except:
 
 if not logString or not logFunction:
         enableLogging()
-

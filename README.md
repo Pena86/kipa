@@ -12,8 +12,8 @@ Vanhat sivustot:
 
 **Ohjelmaa kokeiltu:**
 
-* Django v.1.11
-* Python v.2.7
+* Django v.2.0
+* Python v.3.5
 * Chrome / Firefox
 
 **Tilanne: toimivat**

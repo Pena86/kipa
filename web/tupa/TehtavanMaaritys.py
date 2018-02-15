@@ -2,18 +2,18 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-from django.utils.safestring import SafeUnicode
-from django.template.loader import render_to_string
 import re
 import string
 import operator
 from decimal import *
-from taulukkolaskin import laskeTaulukko
-from TulosLaskin import luoOsatehtavanKaava
 
-# Lataamista varten:
-from models import *
 from django.core import serializers
+#from django.utils.safestring import SafeUnicode
+from django.template.loader import render_to_string
+
+from .taulukkolaskin import laskeTaulukko
+from .TulosLaskin import luoOsatehtavanKaava
+from .models import *
 
 # Tehtävätyyppien kaavapohja:
 maksimisuoritus= "parhaan_haku(arvio(parhaan_kaava-oikea))"
@@ -57,7 +57,7 @@ def is_kaava(s) :
                         #numero+=1
                 tulos = laskeTaulukko([[kaava]],muuttujat)
                 if tulos[0][0]==None or tulos[0][0]=='S' : 
-			return False
+                        return False
                 else : return True
 
 def validate(posti,field_name,testFunctions,prefix="" ) :
@@ -850,4 +850,3 @@ def tallennaTehtavaData(data) :
                                         osa_tehtava.delete()
                 data['valid']=True
         return tehtava_id
-

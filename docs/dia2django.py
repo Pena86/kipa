@@ -191,4 +191,3 @@ if __name__ == '__main__':
             dia2django(sys.argv[1])
         else :
             print " Use:\n \n   "+sys.argv[0]+" diagram.dia\n\n"
-

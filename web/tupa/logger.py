@@ -2,16 +2,17 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-
-from django.conf import settings
-from xml.dom.minidom import parse, parseString
 import os.path
 import re
-##from tupa.models import Kisa
-from django.shortcuts import get_object_or_404
-from duplicate import kisa_xml
 
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+
+from .duplicate import kisa_xml
+
+from xml.dom.minidom import parse, parseString
 from xml.dom.minidom import getDOMImplementation
+
 impl = getDOMImplementation()
 
 record_base='<?xml version="1.0" encoding="utf-8"?>\n<django-objects version="1.0">\n</django-objects>'
@@ -75,4 +76,3 @@ class PostDataRecorder:
                                 FILE.write( "</django-objects>" )
                                 FILE.close()
                                 return None
-

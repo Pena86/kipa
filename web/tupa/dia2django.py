@@ -2,7 +2,6 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-
 import codecs
 import gzip
 import xml.dom.minidom
@@ -118,4 +117,3 @@ if __name__ == '__main__':
                 print '    #gen_dia_class CLASSNAME'
                 print '    #end_dia_class \n'
                 print " Use:\n "+sys.argv[0]+" diagram.dia source.py\n\n"
-

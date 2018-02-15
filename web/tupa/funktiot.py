@@ -4,12 +4,11 @@
 """
 Tässä tiedostossa on määritelty kaikki funktiot joita voi käyttää laskennan kaavoissa.
 """
-from laskentatyypit import *
 
 from math import *
 #from decimal import *
 
-import log
+from .laskentatyypit import *
 
 def pienin(*lista) :
         if len(lista)==1 : return min(lista) 
@@ -52,8 +51,8 @@ def summa( *lista ) :
         """
         s=DictDecimal(0) 
         for v in lista : 
-                if v and not type(v)==unicode and not type(v)==str: 
-			s=s+v
+            if v and not type(v)==unicode and not type(v)==str: 
+                s=s+v
         return s
 
 def interpoloi(x,x1,y1,x2,y2=0):
@@ -104,5 +103,3 @@ listafunktiot={"pienin" : pienin,
                 "med" : mediaani ,
                 "kesk" : keskiarvo,
                 "mean" : keskiarvo }
-
-

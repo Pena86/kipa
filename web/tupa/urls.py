@@ -2,11 +2,10 @@
 # KiPa(KisaPalvelu), tuloslaskentajärjestelmä partiotaitokilpailuihin
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
-
 from django.conf.urls import url
 from django.conf import settings
-from . import views
 
+from . import views
 
 tal=r"(?P<talletettu>(talletettu)?)/?$"
 
@@ -39,4 +38,3 @@ urlpatterns = [
         url(r'^(?P<kisa_nimi>[^/]+)/nayta/(?P<muotoilu>[^/]+)/piirit/$', views.piirinTulokset, name='piirit'),
         url(r'^(?P<kisa_nimi>[^/]+)/nayta/(?P<muotoilu>[^/]+)/(?P<sarja_id>\d+)/$', views.naytaSarja, name='naytaSarja'),
         ]
-

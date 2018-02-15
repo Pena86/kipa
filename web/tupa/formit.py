@@ -6,16 +6,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import re
+from decimal import *
+
 from django.forms.models import modelformset_factory
 from django import forms
-from models import *
 from django.contrib.auth.models import User, Group
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
-from decimal import *
-import re
-from django.utils.safestring import SafeUnicode
+from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
+
+from .models import *
 
 class VartioForm(ModelForm):
         ulkopuolella = forms.IntegerField(
@@ -47,7 +49,7 @@ class SarjaForm(ModelForm):
                 fields = "__all__"
 
 SarjaFormSet = inlineformset_factory(Kisa,Sarja,extra=8 , form=SarjaForm)
-SarjaFormSet.helppiteksti=SafeUnicode('<span onmouseover="tooltip.show(\'Sarjan <strong>nimet</strong> voivat sis&auml;lt&auml;&auml; &auml;&auml;kk&ouml;si&auml; ja v&auml;lily&ouml;ntej&auml;.<br><strong>Tasapisteiss&auml; m&auml;&auml;r&auml;&auml;v&auml;t teht&auml;v&auml;t</strong> -kohdat kertovat tasapisteiss&auml; m&auml;&auml;r&auml;&auml;vien teht&auml;vien numerot. Palaa t&auml;ytt&auml;m&auml;&auml;n ne m&auml;&auml;ritelty&auml;si kyseiset teht&auml;v&auml;t.\');" onmouseout="tooltip.hide();"><img src="/kipamedia/help_small.png" /></span>')
+SarjaFormSet.helppiteksti=mark_safe('<span onmouseover="tooltip.show(\'Sarjan <strong>nimet</strong> voivat sis&auml;lt&auml;&auml; &auml;&auml;kk&ouml;si&auml; ja v&auml;lily&ouml;ntej&auml;.<br><strong>Tasapisteiss&auml; m&auml;&auml;r&auml;&auml;v&auml;t teht&auml;v&auml;t</strong> -kohdat kertovat tasapisteiss&auml; m&auml;&auml;r&auml;&auml;vien teht&auml;vien numerot. Palaa t&auml;ytt&auml;m&auml;&auml;n ne m&auml;&auml;ritelty&auml;si kyseiset teht&auml;v&auml;t.\');" onmouseout="tooltip.hide();"><img src="/kipamedia/help_small.png" /></span>')
 
 TehtavaValintaFormSet = inlineformset_factory(Sarja,Tehtava,fields=('jarjestysnro',))
 
@@ -80,7 +82,7 @@ class TehtavaLinkkilistaFormset(tuhoaTehtaviaFormset):
                                 nimi=unicode(form.instance.jarjestysnro)+". "+unicode(form.instance.nimi)
                         piirto=piirto+"<a href="+linkki+">"+nimi+"</a>  "+form.as_p()+"<br>" 
                         piirto = piirto.replace("<p>","").replace("</p>","")
-                return SafeUnicode(piirto)
+                return mark_safe(piirto)
 
 class HelpWidget(forms.TextInput):
         """
@@ -91,7 +93,7 @@ class HelpWidget(forms.TextInput):
                 self.helptext=helptext
 
         def render(self, name , value=None, attrs=None, renderer=None):
-                return SafeUnicode(super(HelpWidget, self).render(name, value, attrs, renderer) ) + '<span onmouseover="tooltip.show(\''+ self.helptext +'\');" onmouseout="tooltip.hide();"><img src="/kipamedia/help_small.png" /></span>' 
+                return mark_safe(super(HelpWidget, self).render(name, value, attrs, renderer) ) + '<span onmouseover="tooltip.show(\''+ self.helptext +'\');" onmouseout="tooltip.hide();"><img src="/kipamedia/help_small.png" /></span>' 
 
 
 
@@ -312,4 +314,3 @@ class UploadFileNameForm(forms.Form):
                         if k.nimi==nimi :
                                 raise forms.ValidationError("Nimi on jo käytössä")
                 return nimi
-

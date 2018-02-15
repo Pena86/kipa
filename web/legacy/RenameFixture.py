@@ -6,4 +6,3 @@ if __name__ == "__main__":
         koodi=koodi.replace("legacy","tupa")
         source=open( "fixtures/old.xml","w" )
         source.write(koodi)
-

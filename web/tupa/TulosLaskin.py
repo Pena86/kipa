@@ -3,18 +3,20 @@
 #    Copyright (C) 2010  Espoon Partiotuki ry. ept@partio.fi
 
 if not __name__ == "__main__":
-	from funktiot import *
+	from .funktiot import *
 
 from decimal import *
-from laskentatyypit import *
 import re
-from taulukkolaskin import *
 import math
 import operator
+import logging as log
+
 #from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
-from models import *
-import log
+
+from .models import *
+from .laskentatyypit import *
+from .taulukkolaskin import *
 
 def korvaa(lause,pino,loppu=None) :
     """
@@ -369,4 +371,3 @@ def laskeSarja(sarja,syotteet,vartiot=None,tehtavat=None):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
