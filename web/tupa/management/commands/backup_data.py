@@ -52,7 +52,7 @@ class Command(BaseCommand):
                     if model is None:
                         raise CommandError("Unknown model: %s.%s" % (app_label, model_label))
 
-                    if app in app_list.keys():
+                    if app in list(app_list):
                         if app_list[app] and model not in app_list[app]:
                             app_list[app].append(model)
                     else:

@@ -157,7 +157,7 @@ def maaritaKisa(request, kisa_nimi=None,talletettu=None):
         sarjaFormit.label="Sarjat"
         # Annetaan tiedot templatelle:
         if posti and sarjaFormit.is_valid() and kisaForm.is_valid() :
-                if "nappi" in posti.keys() and posti['nappi']=="ohjaus" :
+                if "nappi" in list(posti) and posti['nappi']=="ohjaus" :
                         return kipaResponseRedirect("/kipa/"+kisa.nimi+"/maarita/vartiot/")
                 else :
                         return kipaResponseRedirect("/kipa/"+kisa.nimi+"/maarita/talletettu/")
@@ -239,14 +239,14 @@ def maaritaVartiot(request,kisa_nimi,talletettu=None):
                 s.taustaTulokset() # Taustalaskenta käyntiin.
 
         if posti and post_ok: # Talletetaanko?
-                if "nappi" in posti.keys() and posti["nappi"]=="ohjaus" :
+                if "nappi" in list(posti) and posti["nappi"]=="ohjaus" :
                         return kipaResponseRedirect("/kipa/"+kisa_nimi+"/maarita/tehtava/")
                 return kipaResponseRedirect("/kipa/"+kisa_nimi+"/maarita/vartiot/talletettu/")
         else: # Ei tallennusta
                 tal=""
                 if talletettu=="talletettu" and not posti : tal="Talletettu!" # Talletettu info yläpalkkiin.
                 ohjaus_nappi=None
-                if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER'][-23:]== "/kipa/uusiKisa/maarita/" :
+                if 'HTTP_REFERER' in list(request.META) and request.META['HTTP_REFERER'][-23:]== "/kipa/uusiKisa/maarita/" :
                         ohjaus_nappi="siirry tehtävien määritykseen" # Ensimmäisellä talletuksella näkyy siirry nappi.
                 return render(request, 'tupa/valitse_formset.html',
                                         { 'taulukko' : taulukko ,
@@ -305,8 +305,8 @@ def maaritaTehtava(request, kisa_nimi, tehtava_id=None, sarja_id=None,talletettu
         if tehtava and not tehtava.nimi == '' : otsikko = str(tehtava.nimi) + ' (' + sarja.nimi + ')'
 
         # Talletetaanko ja siirrytäänkö talletettu sivuun?
-        if posti and not 'lisaa_maaritteita' in posti.keys() and daatta['valid'] :
-                if "nappi" in posti.keys() and posti["nappi"]=="ohjaus": # Talleta ja luo uusi.
+        if posti and not 'lisaa_maaritteita' in list(posti) and daatta['valid'] :
+                if "nappi" in list(posti) and posti["nappi"]=="ohjaus": # Talleta ja luo uusi.
                         return kipaResponseRedirect("/kipa/"+ kisa_nimi+ "/maarita/tehtava/uusi/sarja/"+str(sarja.id)+"/")
 
                 return kipaResponseRedirect("/kipa/"+kisa_nimi+"/maarita/tehtava/"+str(tehtava_id)+'/talletettu/' )
@@ -361,7 +361,7 @@ def syotaTehtava(request, kisa_nimi , tehtava_id,talletettu=None,tarkistus=None)
         syottovirhe=None
         if request.method == 'POST':
                 posti=request.POST
-                if 'tarkistettu' in posti.keys():  tehtava.tarkistettu=True  # Tarkistettu täppä
+                if 'tarkistettu' in list(posti):  tehtava.tarkistettu=True  # Tarkistettu täppä
                 else : tehtava.tarkistettu=False
         tarkistettu=tehtava.tarkistettu
         validi=True
@@ -387,7 +387,7 @@ def syotaTehtava(request, kisa_nimi , tehtava_id,talletettu=None,tarkistus=None)
                             formi =  TarkistusSyoteForm(m,v,posti,instance=syote,prefix=str(v.nro)+"_"+str(m.pk),)
                         else : # Syötetään normi syötteitä.
                                 formi = SyoteForm(m,v,posti,instance=syote,prefix=str(v.nro)+"_"+str(m.pk),)
-                        if not "class" in formi.fields['arvo'].widget.attrs.keys() : 
+                        if not "class" in list(formi.fields['arvo'].widget.attrs) : 
                             formi.fields['arvo'].widget.attrs["class"]="col"+str(colnum)
                         else: formi.fields['arvo'].widget.attrs["class"] += " col" + str(colnum)
 

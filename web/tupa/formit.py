@@ -252,7 +252,7 @@ def tulostauluFormFactory( tauluTyyppi ) :
                         self.vartio=vartio
                         self.tehtava=tehtava
                 def is_valid(self) :
-                        if self.posti and self.id in self.posti.keys():
+                        if self.posti and self.id in list(self.posti):
                                 self.pisteet=self.posti[self.id]
                                 return 1
                         else: 

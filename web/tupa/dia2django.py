@@ -67,7 +67,7 @@ def haeLuokanRunko(luokka,rivin_alku) :
                 varchar=varcharRE.search(a.tyyppi)
                 tyyppi=""
         
-                if a.tyyppi.strip(" ") in dictSqlDjango.keys() :
+                if a.tyyppi.strip(" ") in list(dictSqlDjango) :
                         tyyppi = dictSqlDjango[a.tyyppi.strip()]+ "()"
                 else:
                         tyyppi = a.tyyppi

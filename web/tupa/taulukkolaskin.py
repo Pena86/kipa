@@ -13,10 +13,10 @@ from . import log
 pfunktiot={}
 lfunktiot={}
 
-for k in perusfunktiot.keys() : 
+for k in list(perusfunktiot) : 
         def pfunctionfactory( funktio ) : return lambda *a : suorita(funktio,*a)
         pfunktiot[k]= pfunctionfactory( perusfunktiot[k] )  
-for k in listafunktiot.keys() : 
+for k in list(listafunktiot) : 
         def lfunctionfactory( funktio ) : return lambda *a : suorita_lista(funktio,*a)
         lfunktiot[k]= lfunctionfactory(listafunktiot[k] )
 
@@ -25,7 +25,7 @@ def dictToMathDict(dictionary) :
         Muuttaa tavallisen sanakirjan rekursiivisesti laskennalliseksi sanakirjaksi.
         """
         new=MathDict({})
-        for k in dictionary.keys():
+        for k in list(dictionary):
                 if type(dictionary[k])==dict : new[k]= dictToMathDict(dictionary[k])
                 else : new[k]=dictionary[k]
         return new

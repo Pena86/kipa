@@ -38,21 +38,21 @@ class MathDict(SequenceOperations,dict):
         def operate_to_all(self,function2, other) :
                 if type(other) == MathDict :
                         oper = MathDict({})
-                        for k in self.keys() : 
+                        for k in list(self) : 
                                 try:
                                         oper[k]=function2(self[k],other[k])
                                 except KeyError: pass
                                 except TypeError : pass
                 elif type(other) == MathList :
                         oper=MathListDict({})
-                        for k in self.keys() : 
+                        for k in list(self) : 
                                 try:
                                     oper[k]= [(function2(self[k],l,*args) for l in other)]
                                 except KeyError: pass
                                 except TypeError : pass
                 else: 
                         oper = MathDict({})
-                        for k in self.keys() : 
+                        for k in list(self) : 
                             try:
                                 oper[k]=function2(self[k],other)
 
@@ -137,7 +137,7 @@ class MathListDict(SequenceOperations,dict) :
 
                 elif type(other) == MathDict :
                         for k,v in other.items() :
-                                if k in self.keys(): # ainoastaan alkiot jotka löytyvät
+                                if k in list(self): # ainoastaan alkiot jotka löytyvät
                                         oper[k]=[]
                                         for l in self[k] : 
                                             try:
@@ -172,7 +172,7 @@ class DictDecimal(SequenceOperations,Decimal) :
                 oper=DictDecimal()
                 if type(other) == MathDict :
                         oper = MathDict(other)
-                        for k in other.keys() : 
+                        for k in list(other) : 
                                 try:
                                         oper[k]=function2(self,other[k])
                                 except KeyError: pass
@@ -254,7 +254,7 @@ def listaksi(a,*opt):
                 return lista
         try:
                 lista=[]
-                for k in joukkio.keys() :
+                for k in list(joukkio) :
                         if type(joukkio[k])==DictDecimal or type(joukkio[k])==Decimal :
                                 lista.append(DictDecimal(joukkio[k]))
                 return lista
@@ -277,11 +277,11 @@ def run_dict(list,funktio,*param):
                         return karsi(params,funktio)
 
         rValue=MathDict({})
-        for k in mdict.keys() :
+        for k in list(mdict) :
                 parametrit = []
 	
                 for p in params :
-                       	if type(p)== MathDict and k in p.keys() : parametrit.append(p[k])
+                       	if type(p)== MathDict and k in list(p) : parametrit.append(p[k])
                         else : parametrit.append(p)
 
                 if list: 
