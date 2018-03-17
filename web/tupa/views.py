@@ -10,7 +10,7 @@ from decimal import *
 import random
 import re
 import time
-#from UnicodeTools import *
+import csv
 
 from django.shortcuts import redirect, get_object_or_404
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -611,7 +611,7 @@ def sarjanTuloksetCSV(request, kisa_nimi, sarja_id) :
         disposition='attachment; filename='+kisa_nimi+"_"+sarja.nimi+"_"+time.strftime('%Y-%m-%d_%H-%M')+'.csv'
         response['Content-Disposition'] = disposition.encode('utf-8')
 
-        writer = UnicodeWriter(response, delimiter=';')
+        writer = csv.writer(response, delimiter=';')
         writer.writerow([sarja.kisa.nimi, '', sarja.nimi])
         writer.writerow(['', '', time.strftime("%e.%m.%Y %H:%M ", time.localtime()).replace('.0', '.')]) # aika
         writer.writerow(['']) # tyhjä rivi
@@ -723,7 +723,7 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             disposition='attachment; filename='+kisa_nimi+"_Piirien_tulokset_"+time.strftime('%Y-%m-%d_%H-%M')+'.csv'
             response['Content-Disposition'] = disposition.encode('utf-8')
 
-            writer = UnicodeWriter(response, delimiter=';')
+            writer = csv.writer(response, delimiter=';')
             writer.writerow([kisa.nimi, '', 'Piirikohtaiset tulokset'])
             writer.writerow(['', '', time.strftime("%e.%m.%Y %H:%M", time.localtime()).replace('.0', '.')]) # aika
             writer.writerow([]) # tyhjä rivi
@@ -731,7 +731,10 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             #Piirien otsikkorivi
             sij_laskuri = 1
             writer.writerow(['Sij.', 'Piiri', 'Pisteet'])
-            for l, i in sorted(piiriTulos.items(), key=lambda a: a[1], reverse = True):
+            a = list()
+            for l, i in piiriTulos.items():
+                a.append([l,i])
+            for l, i in sorted(a, key=lambda x: x[1]['pisteet'], reverse = True):
                 #print (sij_laskuri, l, i)
                 writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
                 sij_laskuri += 1
@@ -740,7 +743,10 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             #Lpk otsikkorivi
             sij_laskuri = 1
             writer.writerow(['Sij.', 'Lippukunta', 'Pisteet'])
-            for l, i in sorted(lpkTulos.items(), key=lambda a: a[1], reverse = True):
+            a = list()
+            for l, i in piiriTulos.items():
+                a.append([l,i])
+            for l, i in sorted(a, key=lambda x: x[1]['pisteet'], reverse = True):
                 #print (sij_laskuri, l, i)
                 writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
                 sij_laskuri += 1
