@@ -88,13 +88,12 @@ def korvaaLuokanRunko(koodi,luokka):
         if sisennys_haku:
                 sisennys=len(sisennys_haku.group(0)) * " "
         runko=haeLuokanRunko(luokka,sisennys)
-        return re.sub(ur'(?s)(?<=#gen_dia_class '+ luokka.nimi +'\n).*?#end_dia_class',
+        return re.sub(r'(?s)(?<=#gen_dia_class '+ luokka.nimi +'\n).*?#end_dia_class',
                                 runko+"\n"+sisennys +r"#end_dia_class",koodi)
 
 def luoMallienRungot(kaavion_nimi,koodin_nimi):
         source=open( koodin_nimi , "r" )
         koodi=source.read()
-        koodi=str(koodi,"utf-8")
         source.close()            
 
         f=codecs.open(kaavion_nimi,"rb")
@@ -105,15 +104,15 @@ def luoMallienRungot(kaavion_nimi,koodin_nimi):
         for l in haeLuokat(objektit):
                 koodi= korvaaLuokanRunko(koodi,l)
         source=open( koodin_nimi,"w" )
-        source.write( koodi.encode("utf-8"))
+        source.write(koodi)
 
 
 if __name__ == '__main__':
         if len(sys.argv) == 3:
                 luoMallienRungot(sys.argv[1],sys.argv[2])            
         else :
-                print sys.argv[0] + ' - Generates bodies of django data models to python sources. \n'
-                print ' bodies to be generated have to be tagged in source with comments: '
-                print '    #gen_dia_class CLASSNAME'
-                print '    #end_dia_class \n'
-                print " Use:\n "+sys.argv[0]+" diagram.dia source.py\n\n"
+                print (sys.argv[0] + ' - Generates bodies of django data models to python sources. \n')
+                print (' bodies to be generated have to be tagged in source with comments: ')
+                print ('    #gen_dia_class CLASSNAME')
+                print ('    #end_dia_class \n')
+                print (" Use:\n "+sys.argv[0]+" diagram.dia source.py\n\n")
