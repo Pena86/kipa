@@ -872,7 +872,7 @@ def korvaaKisa(request,kisa_nimi=None):
                                 except :
                                         kisa=None
 
-                        xml=r""
+                        xml=b""
                         for chunk in request.FILES['file'].chunks():
                                 xml+=chunk
 
@@ -887,7 +887,7 @@ def korvaaKisa(request,kisa_nimi=None):
                         syotteet=[]
                         parametrit=[]
 
-                        for obj in serializers.deserialize("xml", xml):
+                        for obj in serializers.deserialize("xml", xml.decode()):
                                 if type(obj.object)==Kisa : kisat.append(obj.object)
                                 elif type(obj.object)==Sarja: sarjat.append(obj.object)
                                 elif type(obj.object)==Vartio : vartiot.append(obj.object)
