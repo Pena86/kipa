@@ -669,12 +669,13 @@ def sarjanTuloksetCSV(request, kisa_nimi, sarja_id) :
 def piirinTulokset(request, kisa_nimi, muotoilu):
         """
         Piirikohtaiset tulokset.
+        Jos vartiolla ei ole piiri tai lippukunta parametria, ne jäävät pois pisteytyksestä
         """
         kisa = get_object_or_404(Kisa, nimi=kisa_nimi )
         sarjat = kisa.sarja_set.all()
-        tulostaulu = []
-        piiriTulos = {}
-        lpkTulos = {}
+        tulostaulu = [] # Voidaan näyttää kaikkien sarjojen tulokset tarkastuslaskentaa varten
+        piiriTulos = []
+        lpkTulos = []
         for sarjaItem in sarjat:
             sarja = Sarja.objects.get(id=sarjaItem.id)
             tulokset = sarja.laskeTulokset()
@@ -686,15 +687,23 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
                     #print (a[0].nimi, a[0].piiri, a[0].lippukunta, a[1], piiriPisteet)
                     sarjanTulokset.append([a[0].nimi, a[0].piiri, a[0].lippukunta, a[1], piiriPisteet])
 
-                    if a[0].piiri in piiriTulos:
-                        piiriTulos[a[0].piiri]['sijoitukset'].append(piiriPisteet)
-                    else:
-                        piiriTulos[a[0].piiri] = {'sijoitukset': [piiriPisteet]}
+                    found = False
+                    for i in piiriTulos:
+                        if i['nimi'] == a[0].piiri:
+                            i['sijoitukset'].append(piiriPisteet)
+                            found = True
+                            break
+                    if not found:
+                        piiriTulos.append({'nimi': a[0].piiri, 'sijoitukset': [piiriPisteet]})
 
-                    if a[0].lippukunta in lpkTulos:
-                        lpkTulos[a[0].lippukunta]['sijoitukset'].append(piiriPisteet)
-                    else:
-                        lpkTulos[a[0].lippukunta] = {'sijoitukset': [piiriPisteet]}
+                    found = False
+                    for i in lpkTulos:
+                        if i['nimi'] == a[0].lippukunta:
+                            i['sijoitukset'].append(piiriPisteet)
+                            found = True
+                            break
+                    if not found:
+                        lpkTulos.append({'nimi': a[0].lippukunta, 'sijoitukset': [piiriPisteet]})
 
                     if piiriPisteet > 0:
                         piiriPisteet -= 1
@@ -702,14 +711,12 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             tulostaulu.append([tulokset[0][0][0].nimi, sarjanTulokset])
 
         for l in piiriTulos:
-            piiriTulos[l]['pisteet'] = sum(piiriTulos[l]['sijoitukset'])
-            piiriTulos[l]['sijoitukset'].sort(reverse = True)
-            #print (l, piiriTulos[l])
+            l['pisteet'] = sum(l['sijoitukset'])
+            l['sijoitukset'].sort(reverse = True)
 
         for l in lpkTulos:
-            lpkTulos[l]['pisteet'] = sum(lpkTulos[l]['sijoitukset'])
-            lpkTulos[l]['sijoitukset'].sort(reverse = True)
-            #print (l, lpkTulos[l])
+            l['pisteet'] = sum(l['sijoitukset'])
+            l['sijoitukset'].sort(reverse = True)
 
         if muotoilu == 'tuloste':
             template_selector = "tupa/paperituloste_head.html"
@@ -731,24 +738,18 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
             #Piirien otsikkorivi
             sij_laskuri = 1
             writer.writerow(['Sij.', 'Piiri', 'Pisteet'])
-            a = list()
-            for l, i in piiriTulos.items():
-                a.append([l,i])
-            for l, i in sorted(a, key=lambda x: x[1]['pisteet'], reverse = True):
+            for l in sorted(piiriTulos, key=lambda x: x['pisteet'], reverse = True):
                 #print (sij_laskuri, l, i)
-                writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
+                writer.writerow([str(sij_laskuri), l['nimi'], str(l['pisteet'])])
                 sij_laskuri += 1
             writer.writerow([]) # tyhjä rivi
 
             #Lpk otsikkorivi
             sij_laskuri = 1
             writer.writerow(['Sij.', 'Lippukunta', 'Pisteet'])
-            a = list()
-            for l, i in piiriTulos.items():
-                a.append([l,i])
-            for l, i in sorted(a, key=lambda x: x[1]['pisteet'], reverse = True):
+            for l in sorted(lpkTulos, key=lambda x: x['pisteet'], reverse = True):
                 #print (sij_laskuri, l, i)
-                writer.writerow([str(sij_laskuri), l, str(i['pisteet'])])
+                writer.writerow([str(sij_laskuri), l['nimi'], str(l['pisteet'])])
                 sij_laskuri += 1
             writer.writerow([]) # tyhjä rivi
 
@@ -760,12 +761,13 @@ def piirinTulokset(request, kisa_nimi, muotoilu):
                     writer.writerow([vartio[0], vartio[1], vartio[2], str(vartio[3]), str(vartio[4])])
                 writer.writerow([]) # tyhjä rivi
 
+            # messages.success( request, "csv tiedosto generoitu onnistuneesti" ) # Viestien näyttäminen ei käytössä sivulla
             return response #.csv lataus lähtee tällä, uutta sivua selaimeen ei ladata
 
         return render(request,  'tupa/piiri_tulokset.html',
             {'tulos_taulukko' : tulostaulu,
             'piiritulos' : piiriTulos,
-            'lpk' : lpkTulos,
+            'lpktulos' : lpkTulos,
             'kisa' : kisa,
             'kisa_nimi' : kisa.nimi,
             'template_selector' : template_selector,
