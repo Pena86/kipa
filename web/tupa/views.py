@@ -28,6 +28,7 @@ from .TehtavanMaaritys import *
 from .TulosLaskin import *
 from .formit import *
 from .models import *
+from .log import enableLogging, clearLoki, palautaLoki
 import django.db
 
 def kipaResponseRedirect(url) : return HttpResponse('<html><head><meta http-equiv="REFRESH" content="0;url='+url+'"></HEAD><BODY></BODY></HTML>')
@@ -535,7 +536,7 @@ Näkymät tulosten näyttämiseen
 """
 
 @login_required
-def naytaValitse(request, kisa_nimi, muotoilu):
+def naytaValitse(request, kisa_nimi, muotoilu = 'html'):
     """
     Valintalista kisan sarjojen tuloksista.
     """

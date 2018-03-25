@@ -117,6 +117,10 @@ def ViewSanityCheck(fixture_name):
                         tehtavat=Tehtava.objects.all()
                         virheet=[]
                         request =HttpRequest()
+                        request.user = User.objects.create_user(
+                                username='test', email='test@test.test', password='top_secret')
+                        request.META['SERVER_NAME'] = 'test.test'
+                        request.META['SERVER_PORT'] = '80'
                         maaritaKisa(request)
                         korvaaKisa(request)
                         for k in kisat : # Kisakohtaiset n�kym�t
@@ -128,7 +132,7 @@ def ViewSanityCheck(fixture_name):
                                 testiTulos(request,kisa_nimi=kisa_nimi)
                                 syotaKisa(request,kisa_nimi=kisa_nimi)
                                 laskennanTilanne(request,kisa_nimi=kisa_nimi)
-                                tulosta(request,kisa_nimi=kisa_nimi)
+                                naytaValitse(request,kisa_nimi=kisa_nimi)
                                 tallennaKisa(request, kisa_nimi=kisa_nimi)
                                 poistaKisa(request, kisa_nimi=kisa_nimi)
                         for s in sarjat: # Sarjakohtaiset n�kym�t
@@ -136,9 +140,9 @@ def ViewSanityCheck(fixture_name):
                                 kisa_nimi=s.kisa.nimi
                                 maaritaTehtava(request,kisa_nimi=kisa_nimi,sarja_id=sarja_id)
                                 kopioiTehtavia(request,kisa_nimi=kisa_nimi,sarja_id=sarja_id)
-                                tulostaSarja(request,kisa_nimi=kisa_nimi, sarja_id=sarja_id)
-                                sarjanTuloksetCSV(request, kisa_nimi=kisa_nimi, sarja_id=sarja_id) 
-                                tulostaSarjaHTML(request, kisa_nimi=kisa_nimi, sarja_id=sarja_id)
+                                naytaSarja(request,kisa_nimi=kisa_nimi, muotoilu='html', sarja_id=sarja_id) 
+                                naytaSarja(request, kisa_nimi=kisa_nimi, muotoilu='tuloste', sarja_id=sarja_id)
+                                sarjanTuloksetCSV(request, kisa_nimi=kisa_nimi, sarja_id=sarja_id)
                         for t in tehtavat: # teht�v�kohtaiset n�kym�t
                                 tehtava_id=t.id
                                 kisa_nimi=t.sarja.kisa.nimi
