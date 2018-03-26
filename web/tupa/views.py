@@ -28,7 +28,7 @@ from .TehtavanMaaritys import *
 from .TulosLaskin import *
 from .formit import *
 from .models import *
-from .log import enableLogging, clearLoki, palautaLoki
+from . import log
 import django.db
 
 def kipaResponseRedirect(url) : return HttpResponse('<html><head><meta http-equiv="REFRESH" content="0;url='+url+'"></HEAD><BODY></BODY></HTML>')
@@ -593,7 +593,7 @@ def naytaSarja(request, kisa_nimi, muotoilu, sarja_id = None, vaihtoaika = 15, s
             'vaihtoaika' : vaihtoaika,
             'seur_id' : seur_id,
             'template_selector' : template_selector,
-            'taakse' : {'url' : '../../', 'title' : 'Tulokset sarjoittain'} },)
+            'taakse' : {'url' : '../../sivu/', 'title' : 'Tulokset sarjoittain'} },)
 
 @login_required
 def sarjanTuloksetCSV(request, kisa_nimi, sarja_id) :
@@ -1102,8 +1102,8 @@ def tehtavanVaiheet(request,kisa_nimi,tehtava_id,vartio_id=None):
         tehtava = get_object_or_404(Tehtava , id=tehtava_id )
 
         responssi = u"<html><body>Vartion laskennan vaiheet tehtävässä " + tehtava.nimi + " <br> "
-        enableLogging()
-        clearLoki()
+        log.enableLogging()
+        log.clearLoki()
         tehtavan_syotteet =Syote.objects.filter(maarite__osa_tehtava__tehtava=tehtava)
         if tehtavan_syotteet : hot=69 # Viettelee syotteet kannasta.
 
@@ -1111,6 +1111,6 @@ def tehtavanVaiheet(request,kisa_nimi,tehtava_id,vartio_id=None):
         responssi += '<a href="/kipa/'+kisa_nimi+'/maarita/tehtava/'+ str(tehtava_id) + '/">'+ u'Takaisin määrittelyyn </a> <br><br>'
         for v in vartiot :
                 responssi += '<a href="/kipa/'+kisa_nimi+'/maarita/vaiheet/'+str(tehtava_id)+'/'+str(v.id) +'/">'+ str(v.nro) +' '+ v.nimi+ '</a> &nbsp; &nbsp;  '
-        responssi += palautaLoki()
+        responssi += log.palautaLoki()
         responssi += "</body></html>"
         return HttpResponse( responssi )

@@ -13,6 +13,7 @@ from binascii import *
 from django.db import models
 
 from .TulosLaskin import *
+from . import log
 import settings
 
 
