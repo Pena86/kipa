@@ -473,16 +473,15 @@ def vapaaKaavaForm(posti,data,prefix) :
                                 'tyyppi': formib[1]  })
                
         if posti and prefix in list(posti) and posti[prefix]=="vk":
-             if 'maaritteet' in list(data):
-                maaritteet = data['maaritteet'].copy().items()
-                for i in range(maara):
-                        if maaritteet[i][1]['kali_vihje']=="":
-                                if type(maaritteet[i][0]) == str and maaritteet[i][0][:1]=="#" :
-                                        del data['maaritteet'][maaritteet[i][0]]
-                                else :
-                                        data['maaritteet'][-maaritteet[i][0]] = maaritteet[i][1]
-                                        del data['maaritteet'][maaritteet[i][0]]
-             data["kaava"]=peruskaava
+            if 'maaritteet' in list(data):
+                for i in list(data['maaritteet']):
+                    if data['maaritteet'][i]['kali_vihje']=="":
+                        if type(i) == str and i[:1]=="#" :
+                            del data['maaritteet'][i]
+                        else :
+                            data['maaritteet'][-i] = data['maaritteet'][i]
+                            del data['maaritteet'][i]
+            data["kaava"]=peruskaava
              
         poistaYlimaaraisetMaaritteet(posti,data,prefix,"vk",maara)
         
@@ -531,16 +530,15 @@ def puhdasKaavaForm(posti,data,prefix) :
                                 'tyyppi': formib[1]  })
                
         if posti and prefix in list(posti) and posti[prefix]=="pk":
-             if 'maaritteet' in list(data):
-                maaritteet = data['maaritteet'].copy().items()
-                for i in range(maara):
-                        if maaritteet[i][1]['kali_vihje']=="":
-                                if type(maaritteet[i][0]) == str and maaritteet[i][0][:1]=="#" :
-                                        del data['maaritteet'][maaritteet[i][0]]
-                                else :
-                                        data['maaritteet'][-maaritteet[i][0]] = maaritteet[i][1]
-                                        del data['maaritteet'][maaritteet[i][0]]
-             data['kaava']="vartion_kaava"
+            if 'maaritteet' in list(data):
+                for i in list(data['maaritteet']):
+                    if data['maaritteet'][i]['kali_vihje']=="":
+                        if type(i) == str and i[:1]=="#" :
+                            del data['maaritteet'][i]
+                        else :
+                            data['maaritteet'][-i] = data['maaritteet'][i]
+                            del data['maaritteet'][i]
+            data['kaava']="vartion_kaava"
              
         poistaYlimaaraisetMaaritteet(posti,data,prefix,"pk",maara)
         
