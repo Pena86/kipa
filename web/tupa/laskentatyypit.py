@@ -23,12 +23,21 @@ class SequenceOperations :
         def __rmul__(self,other): return self.operate_to_all( lambda a,b: a*b , other)
         def __div__(self,other): return self.operate_to_all( lambda a,b: a/b , other)
         def __rdiv__(self,other): return self.operate_to_all( lambda a,b: b/a , other)
+        def __mod__(self,other): return self.operate_to_all( lambda a,b: a%b , other)
+        def __rmod__(self,other): return self.operate_to_all( lambda a,b: b%a , other)
+        def __pow__(self,other): return self.operate_to_all( lambda a,b: a**b , other)
+        def __rpow__(self,other): return self.operate_to_all( lambda a,b: b**a , other)
         def __lt__(self, other): return self.operate_to_all( lambda a,b: a<b , other)
         def __le__(self, other): return self.operate_to_all( lambda a,b: a<=b, other)
         def __eq__(self, other): return self.operate_to_all( lambda a,b: a==b, other)
         def __ne__(self, other): return self.operate_to_all( lambda a,b: a!=b, other)
         def __gt__(self, other): return self.operate_to_all( lambda a,b: a>b , other)
         def __ge__(self, other): return self.operate_to_all( lambda a,b: a>=b, other)
+        # Py3 special:
+        def __truediv__(self,other): return self.operate_to_all( lambda a,b: a/b , other)
+        def __rtruediv__(self,other): return self.operate_to_all( lambda a,b: b/a , other)
+        def __floordiv__(self,other): return self.operate_to_all( lambda a,b: a//b , other)
+        def __rfloordiv__(self,other): return self.operate_to_all( lambda a,b: b//a , other)
 
 class MathDict(SequenceOperations,dict):
         """
@@ -277,11 +286,11 @@ def run_dict(list,funktio,*param):
                         return karsi(params,funktio)
 
         rValue=MathDict({})
-        for k in list(mdict) :
+        for k in mdict :
                 parametrit = []
-	
+
                 for p in params :
-                       	if type(p)== MathDict and k in list(p) : parametrit.append(p[k])
+                        if type(p)== MathDict and k in p : parametrit.append(p[k])
                         else : parametrit.append(p)
 
                 if list: 

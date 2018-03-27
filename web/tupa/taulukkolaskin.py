@@ -71,18 +71,15 @@ def laske(lauseke,m={},funktiot={}):
                 try: 
                         tulos = eval(lause)
                 except KeyError : tulos = "S" # Syottämättomiä muuttujia
-                except TypeError :  tulos= None 
+                except TypeError : tulos= "E" # Tehtävää ei tehty
         else :
                 try: 
                         tulos = eval(lause)
                 # Poikkeukset laskuille joita ei pysty laskemaan. 
                 # Pyrkii estämaan ettei koko paska kaadu virheissä.
-                except DivisionByZero : tulos= None 
                 except KeyError : tulos= "S" # Syottämättomiä muuttujia
-                except TypeError :  tulos= None 
-                except SyntaxError: tulos= None
-                except NameError : tulos= None
-                except : tulos= None
+                except TypeError : tulos= "E" # Tehtävää ei tehty
+                except : tulos= None # Kaikki muut virheet menee tänne
         try :
                 log.logString( "laskettu tulos= " + str(tulos.quantize(Decimal('0.1'),rounding=ROUND_HALF_UP ))  )
         except : 
