@@ -18,7 +18,7 @@ Vanhat sivustot:
 
 **Tilanne: toimivat**
 
-* Kipa -sivusto
+* ~~Kipa -sivusto~~ Osa tehtävien parametrien tallentamisesta / lataamisesta ei toimi.
 * Admin -sivusto
 * static files
 * testit (parametrit ei välity)
