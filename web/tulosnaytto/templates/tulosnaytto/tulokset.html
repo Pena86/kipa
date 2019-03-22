@@ -1,0 +1,13 @@
+{% extends "tupa/base.html" %}
+
+{% block title %}{{ heading }}{% endblock %}
+
+{% block content %} 
+
+
+<h1>{{ heading }}</h1>
+
+    <div>{% include "tulosnaytto/sarjanTulokset.html" %}</div>
+
+{% endblock %}
+

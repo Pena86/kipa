@@ -13,6 +13,7 @@ urlpatterns = [
         url(r'^admin/', admin.site.urls),
         url(r'^$', RedirectView.as_view(url='/kipa/', permanent=True)), # Jos et halua uudelleenohjausta, poista tämä käytöstä
         url(r'^kipa/', include('user_management.urls')),
+        url(r'^kipa/', include('tulosnaytto.urls')),
 ]
 
 if settings.DEBUG :

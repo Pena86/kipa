@@ -1,0 +1,39 @@
+
+{% if tulokset %}
+    <h2>{{ tulokset.sarja }}</h2>
+    <table>
+        <tr><!-- tehtävien nimet -->
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><br/><br/>{{tulokset.yhtPist}}</td>
+        {% for teht in tulokset.tehtavat %}
+            <td> <b>{{teht.num}}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.pist }} </td>
+        {% endfor %}
+        </tr>
+
+        <tr><!-- otsikkorivi -->
+            <th>SIJ</th>
+            <th></th>
+            <th>VARTIO</th>
+            <th>YHT</th>
+        {% for teht in tulokset.tehtavat %}
+            <td> </td>
+        {% endfor %}
+        </tr>
+
+        {% for vart in tulokset.vartiot %}
+            <tr id="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
+            <td>{{ vart.sijoitus }}{% if vart.tasap %}!{% endif %}</td>
+            <td>{{ vart.numero }}</td>
+            <td>{{ vart.nimi }}</td>
+            <td>{{ vart.pisteet }}</td>
+            {% for pist in vart.tPist %}
+            <td>{{pist}}</td>
+            {% endfor %}
+        </tr>{% endfor %}
+
+    </table>
+{% endif %}
+
+
