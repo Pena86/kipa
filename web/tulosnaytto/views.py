@@ -1,28 +1,45 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib import messages
 
-def tulokset(request, kisa_nimi=None):
+from tupa.models import Kisa, Sarja
+
+from utils import laskeTulokset_adaptor
+
+def tulokset(request, kisa_nimi = None, sarjat = None):
     tulokset = {
-           'sarja' : 'Oranssi',
+           'sarja' : {'nimi' : 'Oranssi'},
            'tehtavat' : [
-                        {'num' : 1, 'nimi' : 'pah', 'pist' : 4},
-                        {'num' : 2, 'nimi' : 'vies', 'pist' : 5},
-                        {'num' : 3, 'nimi' : 'gran', 'pist' : 3},
-                        {'num' : 4, 'nimi' : 'nayt', 'pist' : 5},
-                        {'num' : 5, 'nimi' : 'laiv', 'pist' : 5},
+                        {'jarjestysnro' : 1, 'nimi' : 'pah', 'maksimipisteet' : 4},
+                        {'jarjestysnro' : 2, 'nimi' : 'vies', 'maksimipisteet' : 5},
+                        {'jarjestysnro' : 3, 'nimi' : 'gran', 'maksimipisteet' : 3},
+                        {'jarjestysnro' : 4, 'nimi' : 'nayt', 'maksimipisteet' : 5},
+                        {'jarjestysnro' : 5, 'nimi' : 'laiv', 'maksimipisteet' : 5},
                         ],
            'yhtPist' : 52,
-           'vartiot' : [
-                       {'nimi' : 'a', 'numero' : 101, 'lpk' : 'a', 'piiri' : 'a', 'sijoitus' : 1, 'tasap' : False, 'pisteet' : 31.3, 'tPist' : [2.5, 2.6, 3.0, 3.0, 3.0]},
-                       {'nimi' : 'b', 'numero' : 102, 'lpk' : 'b', 'piiri' : 'b', 'sijoitus' : 2, 'tasap' : True, 'pisteet' : 25.0, 'tPist' : [0.6, 4.0, 0.0, 2.5, 1.5]},
-                       {'nimi' : 'c', 'numero' : 103, 'lpk' : 'c', 'piiri' : 'c', 'sijoitus' : 3, 'tasap' : False, 'pisteet' : 22.8, 'tPist' : [1.6, 2.7, 2.1, 3.5, 4.5]},
+           'mukana' : [
+                       {'vartio' : {'nimi' : 'a', 'nro' : 101, 'lpk' : 'a', 'piiri' : 'a'}, 'sijoitus' : 1, 'tasap' : False, 'pisteet' : 31.3, 'tPist' : [2.5, 2.6, 3.0, 3.0, 3.0]},
+                       {'vartio' : {'nimi' : 'b', 'nro' : 102, 'lpk' : 'b', 'piiri' : 'b'}, 'sijoitus' : 2, 'tasap' : True, 'pisteet' : 25.0, 'tPist' : [0.6, 4.0, 0.0, 2.5, 1.5]},
+                       {'vartio' : {'nimi' : 'c', 'nro' : 103, 'lpk' : 'c', 'piiri' : 'c'}, 'sijoitus' : 3, 'tasap' : False, 'pisteet' : 22.8, 'tPist' : [1.6, 2.7, 2.1, 3.5, 4.5]},
                        ],
+           'ulkona' : [
+                       {'vartio' : {'nimi' : 'a', 'nro' : 101, 'lpk' : 'a', 'piiri' : 'a'}, 'sijoitus' : 1, 'tasap' : False, 'pisteet' : 31.3, 'tPist' : [2.5, 2.6, 3.0, 3.0, 3.0]},
+                       {'vartio' : {'nimi' : 'a', 'nro' : 101, 'lpk' : 'a', 'piiri' : 'a'}, 'sijoitus' : 1, 'tasap' : False, 'pisteet' : 31.3, 'tPist' : [2.5, 2.6, 3.0, 3.0, 3.0]},
+                      ],
            }
+
+    kisa = get_object_or_404(Kisa, nimi = kisa_nimi)
+    sarjat = Sarja.objects.filter(kisa__nimi = kisa_nimi)
+
+    tulokset = laskeTulokset_adaptor(sarjat[3].id)
+
+
     return render(request, 'tulosnaytto/tulokset.html',{
             'kisa_nimi': kisa_nimi,
+            'kisa' : kisa,
+            'sarjat' : sarjat,
             'heading' : 'Tulokset',
             'tulokset' : tulokset,
             },)

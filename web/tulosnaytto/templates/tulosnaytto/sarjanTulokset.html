@@ -1,6 +1,6 @@
 
 {% if tulokset %}
-    <h2>{{ tulokset.sarja }}</h2>
+    <h2>{{ tulokset.sarja.nimi }}</h2>
     <table>
         <tr><!-- tehtävien nimet -->
             <td></td>
@@ -8,7 +8,7 @@
             <td></td>
             <td><br/><br/>{{tulokset.yhtPist}}</td>
         {% for teht in tulokset.tehtavat %}
-            <td> <b>{{teht.num}}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.pist }} </td>
+            <td> <b>{{teht.jarjestysnro}}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.makspisteet }} </td>
         {% endfor %}
         </tr>
 
@@ -22,16 +22,36 @@
         {% endfor %}
         </tr>
 
-        {% for vart in tulokset.vartiot %}
+        {% for vart in tulokset.mukana %}
             <tr id="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
             <td>{{ vart.sijoitus }}{% if vart.tasap %}!{% endif %}</td>
-            <td>{{ vart.numero }}</td>
-            <td>{{ vart.nimi }}</td>
+            <td>{{ vart.vartio.nro }}</td>
+            <td>{{ vart.vartio.nimi }}</td>
             <td>{{ vart.pisteet }}</td>
             {% for pist in vart.tPist %}
             <td>{{pist}}</td>
             {% endfor %}
         </tr>{% endfor %}
+
+       {% if tulokset.ulkona and tulokset.ulkona|length > 0 %}
+       <tr>
+           <td></td>
+           <td></td>
+           <td>Ulkopuolella</td>
+       </tr>
+
+        {% for vart in tulokset.ulkona %}
+            <tr id="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
+            <td>{{ vart.sijoitus }}{% if vart.tasap %}!{% endif %}</td>
+            <td>{{ vart.vartio.nro }}</td>
+            <td>{{ vart.vartio.nimi }}</td>
+            <td>{{ vart.pisteet }}</td>
+            {% for pist in vart.tPist %}
+            <td>{{pist}}</td>
+            {% endfor %}
+        </tr>{% endfor %}
+        {% endif %}
+
 
     </table>
 {% endif %}
