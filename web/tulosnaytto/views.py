@@ -8,8 +8,10 @@ from tupa.models import Kisa, Sarja
 
 from utils import laskeTulokset_adaptor
 
-def tulokset(request, kisa_nimi = None, sarjat = None):
-    tulokset = {
+import re
+
+def tulokset(request, kisa_nimi = None, sarja_idt = None):
+    example = {
            'sarja' : {'nimi' : 'Oranssi'},
            'tehtavat' : [
                         {'jarjestysnro' : 1, 'nimi' : 'pah', 'maksimipisteet' : 4},
@@ -32,9 +34,17 @@ def tulokset(request, kisa_nimi = None, sarjat = None):
 
     kisa = get_object_or_404(Kisa, nimi = kisa_nimi)
     sarjat = Sarja.objects.filter(kisa__nimi = kisa_nimi)
+    tulokset = []
 
-    tulokset = laskeTulokset_adaptor(sarjat[3].id)
+    print (sarja_idt, re.split(r"[^0-9\s]", sarja_idt))
+    for id in re.split(r"[^0-9\s]", sarja_idt):
+        try:
+            # jos annettu id löytyy sarjojen id:itten listasta, lisää sarja tulostauluun
+            if int(id) in [s.id for s in sarjat]: tulokset.append(laskeTulokset_adaptor(int(id)))
+        except:
+            pass
 
+    #if len(tulokset) < 1: tulokset.append(example)
 
     return render(request, 'tulosnaytto/tulokset.html',{
             'kisa_nimi': kisa_nimi,

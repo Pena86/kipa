@@ -15,7 +15,9 @@
         {% endfor %}
     {% endif %}
 
-    <div>{% include "tulosnaytto/sarjanTulokset.html" %}</div>
+    {% for tulos in tulokset %}
+        <div>{% include "tulosnaytto/sarjanTulokset.html" %}</div>
+    {% endfor %}
 
 {% endblock %}
 
