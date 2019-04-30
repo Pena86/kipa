@@ -6,9 +6,9 @@
             <td></td>
             <td></td>
             <td></td>
-            <td><br/><br/>{{tulos.yhtPist}}</td>
+            <td><br/><br/>{% if tulos.yhtPist > 0 %}{{ tulos.yhtPist }}{% endif %}</td>
         {% for teht in tulos.tehtavat %}
-            <td> <b>{{teht.jarjestysnro}}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.makspisteet }} </td>
+            <td> <b>{{ teht.jarjestysnro }}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.maksimipisteet }} </td>
         {% endfor %}
         </tr>
 

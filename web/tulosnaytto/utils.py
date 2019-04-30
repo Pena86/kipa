@@ -27,8 +27,15 @@ def laskeTulokset_adaptor(sarja_id = None):
         ulkona.append({'vartio' : var[0], 'sijoitus' : sijoitus, 'tasap' : True if pisteet.count(var[1]) > 1 else False, 'pisteet' : var[1], 'tPist' : var[2:]})
         sijoitus += 1
 
+    def myIntify(val):
+        # int('') returns error, so this is only way aroind it inside listcomprehension
+        try:
+            return int(val)
+        except Exception as e:
+            return 0
 
     return {'sarja' : tulokset[0][0][0],
             'tehtavat' : tulokset[0][0][2:],
+            'yhtPist' : sum([myIntify(t.maksimipisteet) for t in tulokset[0][0][2:]]),
             'mukana' : mukana,
             'ulkona' : ulkona,}
