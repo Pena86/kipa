@@ -5,18 +5,22 @@
 {% block content %} 
 
 
-<h1>{{ heading }}</h1>
+    <!--h1>{{ heading }}</h1-->
     {% if kisa %}
-    <p>{{ kisa.nimi }} {{ kisa.aika }} {{kisa.paikka}} </p>
+    <h1>{{ kisa.nimi }}</h1><p> {{ kisa.aika }} {{ kisa.paikka }} </p>
     {% endif%}
-    {% if sarjat %}
+    {% if sarjat and tulokset|length == 1 %}
+        <ul id="sarjatabs" class="shadetabs">
         {% for sarja in sarjat %}
-          <p>{{sarja.id}} {{sarja.nimi}}</p>
+          <li><a href="{% url 'tulosnaytto:tulokset' kisa.nimi sarja.id %}" {% if sarja.id == tulokset.0.sarja.id %}class="selected"{% endif %}>{{sarja.nimi}}</a></li>
         {% endfor %}
+        </ul>
     {% endif %}
 
     {% for tulos in tulokset %}
-        <div>{% include "tulosnaytto/sarjanTulokset.html" %}</div>
+        <div style="border:1px solid gray; margin-bottom: 1em; padding: 10px">
+            {% include "tulosnaytto/sarjanTulokset.html" %}
+        </div>
     {% endfor %}
 
 {% endblock %}

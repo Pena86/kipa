@@ -1,6 +1,6 @@
 
 {% if tulos %}
-    <h2>{{ tulos.sarja.nimi }}</h2>
+    <a href="{% url 'tulosnaytto:tulokset' kisa.nimi tulos.sarja.id %}"><h2>{{ tulos.sarja.nimi }}</h2></a>
     <table>
         <tr><!-- tehtävien nimet -->
             <td></td>
