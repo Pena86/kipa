@@ -1,18 +1,27 @@
 
 {% if tulos %}
     <a href="{% url 'tulosnaytto:tulokset' kisa.nimi tulos.sarja.id %}"><h2>{{ tulos.sarja.nimi }}</h2></a>
-    <table>
-        <tr><!-- tehtävien nimet -->
+    <table id="tulostaulukko_screen">
+        <tr id="teht_nimi"><!-- tehtävien nimet -->
             <td></td>
             <td></td>
-            <td></td>
+            <td class="right"><br/>{% now "j.n.Y G:i"%}<br/>Maxpisteet</td>
             <td><br/><br/>{% if tulos.yhtPist > 0 %}{{ tulos.yhtPist }}{% endif %}</td>
         {% for teht in tulos.tehtavat %}
-            <td> <b>{{ teht.jarjestysnro }}. <br/> {{ teht.nimi }}</b> <br/> {{ teht.maksimipisteet }} </td>
+            <td> <b>{{ teht.jarjestysnro }}. <br/>
+                {%if teht.lyhenne %}
+                    {{ teht.lyhenne }}
+                {% else %}
+                    {{ teht.nimi|slice:":6" }}<br />
+                    {{ teht.nimi|slice:"6:13" }}<br />
+                    {{ teht.nimi|slice:"13:19" }}<br />
+                    {{ teht.nimi|slice:"19:25" }}
+                {% endif %}
+                </b> <br/> {{ teht.maksimipisteet }} </td>
         {% endfor %}
         </tr>
 
-        <tr><!-- otsikkorivi -->
+        <tr id="otsikko"><!-- otsikkorivi -->
             <th>SIJ</th>
             <th></th>
             <th>VARTIO</th>
@@ -23,35 +32,43 @@
         </tr>
 
         {% for vart in tulos.mukana %}
-            <tr id="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
+            <tr id="vartiot" class="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
             <td>{{ vart.sijoitus }}{% if vart.tasap %}!{% endif %}</td>
             <td>{{ vart.vartio.nro }}</td>
-            <td>{{ vart.vartio.nimi }}</td>
+            <td>{{ vart.vartio.nimi }}
+                {% if vart.vartio.lippukunta %}<br>{{ vart.vartio.lippukunta }}{% endif %}
+                {% if vart.vartio.piiri %}<br>{{ vart.vartio.piiri }}{% endif %}
+            </td>
             <td>{{ vart.pisteet }}</td>
             {% for pist in vart.tPist %}
-            <td>{{pist}}</td>
+                <td>{{ pist }}</td>
             {% endfor %}
-        </tr>{% endfor %}
+        </tr>
+        {% endfor %}
 
        {% if tulos.ulkona and tulos.ulkona|length > 0 %}
-       <tr>
+       <tr><td></td></tr>
+       <tr id="otsikko">
            <td></td>
            <td></td>
            <td>Ulkopuolella</td>
        </tr>
 
         {% for vart in tulos.ulkona %}
-            <tr id="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
+            <tr  id="vartiot" class="{% cycle 'odd' 'even' %}"><!-- vartiorivit -->
             <td>{{ vart.sijoitus }}{% if vart.tasap %}!{% endif %}</td>
             <td>{{ vart.vartio.nro }}</td>
-            <td>{{ vart.vartio.nimi }}</td>
+            <td>{{ vart.vartio.nimi }}
+                {% if vart.vartio.lippukunta %}<br>{{ vart.vartio.lippukunta }}{% endif %}
+                {% if vart.vartio.piiri %}<br>{{ vart.vartio.piiri }}{% endif %}
+            </td>
             <td>{{ vart.pisteet }}</td>
             {% for pist in vart.tPist %}
-            <td>{{pist}}</td>
+                <td>{{ pist }}</td>
             {% endfor %}
-        </tr>{% endfor %}
+        </tr>
+        {% endfor %}
         {% endif %}
-
 
     </table>
 {% endif %}
