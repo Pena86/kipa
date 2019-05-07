@@ -39,3 +39,45 @@ def laskeTulokset_adaptor(sarja_id = None):
             'yhtPist' : sum([myIntify(t.maksimipisteet) for t in tulokset[0][0][2:]]),
             'mukana' : mukana,
             'ulkona' : ulkona,}
+
+def lpk_piiri_tulokset(kisa_nimi = None):
+    sarjat = Sarja.objects.filter(kisa__nimi = kisa_nimi)
+
+    lpkt = []
+    piirit = []
+
+    for sarja in sarjat:
+        piiri_pisteet = 15
+        for v in laskeTulokset_adaptor(sarja.id)['mukana']:
+            try:
+                if any(l['nimi'] == v['vartio'].lippukunta for l in lpkt):
+                    for c, l in enumerate(lpkt):
+                        if lpkt[c]['nimi'] == v['vartio'].lippukunta:
+                            lpkt[c]['pisteet'] += piiri_pisteet
+                            lpkt[c]['vartioita'] += 1
+                            break
+                else:
+                    lpkt.append({'nimi' : v['vartio'].lippukunta, 'pisteet' : piiri_pisteet, 'vartioita' : 1})
+            except:
+                pass
+
+            try:
+                if any(l['nimi'] == v['vartio'].piiri for l in piirit):
+                    for c, l in enumerate(piirit):
+                        if piirit[c]['nimi'] == v['vartio'].piiri:
+                            piirit[c]['pisteet'] += piiri_pisteet
+                            piirit[c]['vartioita'] += 1
+                            break
+                else:
+                    piirit.append({'nimi' : v['vartio'].piiri, 'pisteet' : piiri_pisteet, 'vartioita' : 1})
+            except:
+                pass
+
+            if piiri_pisteet > 0:
+                piiri_pisteet -= 1
+
+    lpkt = sorted(lpkt, key = lambda k:k['pisteet'], reverse = True)
+    piirit = sorted(piirit, key = lambda k:k['pisteet'], reverse = True)
+
+    #print (sarjat)
+    return (lpkt, piirit)

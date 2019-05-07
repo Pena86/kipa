@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from tupa.models import Kisa, Sarja
 
-from utils import laskeTulokset_adaptor
+from utils import laskeTulokset_adaptor, lpk_piiri_tulokset
 
 import re
 
@@ -36,8 +36,23 @@ def tulokset(request, kisa_nimi = None, sarja_idt = None):
     sarjat = Sarja.objects.filter(kisa__nimi = kisa_nimi)
     tulokset = []
 
-    print (sarja_idt, re.split(r"[^0-9\s]", sarja_idt))
-    for id in re.split(r"[^0-9\s]", sarja_idt):
+    lpk = True if sarja_idt.lower().find('lpk') != -1 else False
+    piiri = True if sarja_idt.lower().find('piiri') != -1 else False
+    kaikki = True if sarja_idt.lower().find('kaikki') != -1 else False
+    sarja_idt = re.split(r"[^0-9\s]", sarja_idt)
+
+    lpkt, piirit = [[],[]]
+    if lpk or piiri or kaikki:
+        lpkt, piirit = lpk_piiri_tulokset(kisa_nimi)
+
+    if kaikki:
+        sarja_idt.extend([s.id for s in sarjat])
+    elif not lpk:
+        lpkt = []
+    elif not piiri:
+        piirit = []
+
+    for id in sarja_idt:
         try:
             # jos annettu id löytyy sarjojen id:itten listasta, lisää sarja tulostauluun
             if int(id) in [s.id for s in sarjat]: tulokset.append(laskeTulokset_adaptor(int(id)))
@@ -52,4 +67,6 @@ def tulokset(request, kisa_nimi = None, sarja_idt = None):
             'sarjat' : sarjat,
             'heading' : 'Tulokset',
             'tulokset' : tulokset,
+            'lpk_tulos' : lpkt,
+            'piiri_tulos' : piirit,
             },)
