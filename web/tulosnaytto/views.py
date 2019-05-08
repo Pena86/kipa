@@ -3,14 +3,17 @@ from __future__ import unicode_literals
 
 from django.shortcuts import get_object_or_404, render
 from django.contrib import messages
+from django.http import HttpResponse
 
 from tupa.models import Kisa, Sarja
 
 from utils import laskeTulokset_adaptor, lpk_piiri_tulokset
 
 import re
+import time
+import csv
 
-def tulokset(request, kisa_nimi = None, sarja_idt = None):
+def tulokset(request, kisa_nimi = None, muoto = None, sarja_idt = ''):
     example = {
            'sarja' : {'nimi' : 'Oranssi'},
            'tehtavat' : [
@@ -61,6 +64,9 @@ def tulokset(request, kisa_nimi = None, sarja_idt = None):
 
     #if len(tulokset) < 1: tulokset.append(example)
 
+    #print(csv_output_sarja(tulokset[0]))
+    #print(csv_output_piiri(kisa, piirit, lpkt))
+
     return render(request, 'tulosnaytto/tulokset.html',{
             'kisa_nimi': kisa_nimi,
             'kisa' : kisa,
@@ -70,3 +76,57 @@ def tulokset(request, kisa_nimi = None, sarja_idt = None):
             'lpk_tulos' : lpkt,
             'piiri_tulos' : piirit,
             },)
+
+def csv_output_sarja(sarja = None):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + sarja['sarja'].kisa.nimi + "_" + sarja['sarja'].nimi + "_" + time.strftime('%Y-%m-%d_%H-%M') + '.csv'.encode('utf-8')
+
+    writer = csv.writer(response, delimiter=str(u';'))
+    writer.writerow([sarja['sarja'].kisa.nimi, '', sarja['sarja'].nimi])
+    writer.writerow(['', '', time.strftime("%e.%m.%Y %H:%M ", time.localtime()).replace('.0', '.')])
+
+    writer.writerow(['','']) # Riville vain solunvaihto
+
+    writer.writerow(['','Sij.', 'Nro:', 'Vartio:', 'Yht:'] + [t.jarjestysnro for t in sarja['tehtavat']])
+    writer.writerow(['','','','',''] + [t.nimi for t in sarja['tehtavat']])
+    writer.writerow(['','','','',''] + [t.lyhenne for t in sarja['tehtavat']])
+
+    writer.writerow(['','','','Max-pisteet', sarja['yhtPist']] + [t.maksimipisteet for t in sarja['tehtavat']])
+
+    writer.writerow(['','']) # Riville vain solunvaihto
+
+    for v in sarja['mukana']:
+        writer.writerow(['!' if v['tasap'] else '', v['sijoitus'], v['vartio'].nro, v['vartio'].nimi, v['pisteet']] + [t for t in v['tPist']])
+
+    writer.writerow(['','']) # Riville vain solunvaihto
+
+    writer.writerow(['','','Ulkopuolella:'])
+    for v in sarja['ulkona']:
+        writer.writerow(['!' if v['tasap'] else '', v['sijoitus'], v['vartio'].nro, v['vartio'].nimi, v['pisteet']] + [t for t in v['tPist']])
+
+    # "".encode('utf8') tarvitaan python 2:n csv-writerin kanssa
+    writer.writerow(["",""])
+    writer.writerow([u"S = syöttämättä".encode('utf8')])
+    writer.writerow([u"H = vartion suoritus hylätty".encode('utf8')])
+    writer.writerow([u"K = vartio keskeyttänyt".encode('utf8')])
+    writer.writerow([u"E = vartio ei ole tehnyt tehtävää".encode('utf8')])
+    writer.writerow([u"! = vartion sijaluku laskettu tasapisteissä määräävien perusteella".encode('utf8')])
+
+    return response
+
+def csv_output_piiri(kisa, piiri = None, lpk = None):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + kisa.nimi + '_piiritulokset_' if piiri else '_lippukuntatulokset_' + time.strftime('%Y-%m-%d_%H-%M') + '.csv'.encode('utf-8')
+
+    writer = csv.writer(response, delimiter=str(u';'))
+    writer.writerow([kisa.nimi, '', 'Piiritulokset' if piiri else 'Lippukuntatulosket'])
+    writer.writerow(['', '', time.strftime('%e.%m.%Y %H:%M ', time.localtime()).replace('.0', '.')])
+
+    writer.writerow(['','']) # Riville vain solunvaihto
+
+    writer.writerow(['Piiritulokset' if piiri else 'Lippukuntatulokset'])
+    writer.writerow(['Piiri' if piiri else 'Lippukuntatulosket', 'Pisteet', 'Vartioita'])
+    for i in piiri if piiri else lpk:
+        writer.writerow([i['nimi'], i['pisteet'], i['vartioita']])
+
+    return response
