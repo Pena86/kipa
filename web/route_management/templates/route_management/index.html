@@ -1,0 +1,15 @@
+{% extends "tupa/base.html" %}
+
+{% block title %}{{ heading }}{% endblock %}
+
+{% block content %} 
+
+
+<h1>{{ heading }}</h1>
+
+    <p>Ratasuunnitelu</p>
+    <a href="{% url 'rasti' kisa_nimi %}" >Rastit</a>
+ 
+
+{% endblock %}
+
