@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from django.urls import reverse
 
 # Create your views here.
 
@@ -21,4 +22,6 @@ def rasti(request, kisa_nimi=None):
 
         return render(request, 'route_management/rasti.html',{
             'kisa_nimi': kisa_nimi,
-            'heading' : 'Rasti',},)
+            'heading' : 'Rasti',
+            'taakse' : {'url' : reverse("index",args=[kisa_nimi]), 'title' : u'Rata' },
+            } ,)
